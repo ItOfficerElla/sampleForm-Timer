@@ -96,7 +96,7 @@ iframe {
     <div id="expired">⏰ Time is up! The form is no longer available.</div>
   </div>
 
-<script>
+<script> 
   // Set countdown time in minutes:
   let minutes = 1;  
 
@@ -123,7 +123,30 @@ iframe {
   }
 
   let timerInterval = setInterval(updateTimer, 1000);
+
+  // 🔹 Prevent refresh/close
+  window.addEventListener("beforeunload", function (e) {
+    e.preventDefault();
+    e.returnValue = "Your test is in progress. Refreshing will end it.";
+    return "Your test is in progress. Refreshing will end it.";
+  });
+
+  // 🔹 Disable pull-to-refresh on mobile
+  let lastY = 0;
+  document.addEventListener("touchstart", function (e) {
+    lastY = e.touches[0].clientY;
+  });
+  document.addEventListener("touchmove", function (e) {
+    let y = e.touches[0].clientY;
+    if (window.scrollY === 0 && y > lastY) {
+      // Prevent pulling down to refresh
+      e.preventDefault();
+    }
+    lastY = y;
+  }, { passive: false });
 </script>
+
 
 </body>
 </html>
+
