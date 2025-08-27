@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Form with Timer</title>
+  <style>
+    body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f5f7fa;
+  color: #333;
+}
+
+header {
+  background: #fff;
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+
+#timer {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #d9534f;
+}
+
+#form-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem; /* smaller padding for phones */
+}
+
+iframe {
+  width: 100%;
+  height: calc(100vh - 120px); /* fill screen minus header */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Expired message */
+#expired {
+  display: none;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #555;
+  padding: 2rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 🔹 Mobile optimization */
+@media (max-width: 600px) {
+  header h2 {
+    font-size: 1.2rem;
+  }
+
+  #timer {
+    font-size: 1.5rem;
+  }
+
+  #form-container {
+    padding: 0; /* remove padding for more space */
+  }
+
+  iframe {
+    height: calc(100vh - 100px); /* taller iframe for small screens */
+    border-radius: 0; /* edge-to-edge form on mobile */
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <h2>You have 1 minute to finish the exam</h2>
+    <div id="timer">1:00</div>
+  </header>
+
+  <div id="form-container">
+    <!-- Replace the src below with your Google Form embed link -->
+    <iframe id="form-frame" src="https://forms.gle/fR4kG26YxdrDreyaA"></iframe>
+    <div id="expired">⏰ Time is up! The form is no longer available.</div>
+  </div>
+
+<script>
+  // Set countdown time in minutes:
+  let minutes = 1;  
+
+  // Convert to seconds automatically
+  let time = minutes * 60;  
+
+  const timerEl = document.getElementById("timer");
+  const formFrame = document.getElementById("form-frame");
+  const expiredMsg = document.getElementById("expired");
+
+  function updateTimer() {
+    let m = Math.floor(time / 60);
+    let s = time % 60;
+    timerEl.textContent = `${m}:${s < 10 ? "0" : ""}${s}`;
+    
+    if (time > 0) {
+      time--;
+    } else {
+      // Hide the form and show "expired" message
+      formFrame.classList.add("hidden");
+      expiredMsg.style.display = "block";
+      clearInterval(timerInterval);
+    }
+  }
+
+  let timerInterval = setInterval(updateTimer, 1000);
+</script>
+
+</body>
+</html>
